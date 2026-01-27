@@ -1,0 +1,29 @@
+name: Validate Skills
+
+on:
+  push:
+    paths:
+      - 'skills/**'
+  pull_request:
+    paths:
+      - 'skills/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install skills-ref CLI
+        run: npm install -g @anthropic-ai/skills-ref
+
+      - name: Validate all skills
+        run: |
+          for skill in skills/*/; do
+            echo "Validating $skill..."
+            skills-ref validate "$skill"
+          done
