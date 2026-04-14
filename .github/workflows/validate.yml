@@ -16,16 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-python@v6
         with:
-          node-version: '20'
+          python-version: '3.12'
 
       - name: Install skills-ref CLI
-        run: npm install -g @anthropic-ai/skills-ref
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          pip install skills-ref
 
       - name: Validate all skills
         run: |
+          . .venv/bin/activate
           for skill in skills/*/; do
             echo "Validating $skill..."
-            skills-ref validate "$skill"
+            agentskills validate "$skill"
           done
